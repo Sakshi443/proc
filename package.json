@@ -1,0 +1,14 @@
+{
+  "name": "proc",
+  "version": "1.0.0",
+  "description": "A project for Node.js application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Sakshi Manoorkar",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {},
+  "type": "module"
+}

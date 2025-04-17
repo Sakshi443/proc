@@ -1,4 +1,4 @@
-// 1️⃣ Firebase init (unchanged)
+// 1️ Firebase init (unchanged)
 import { initializeApp }   from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -16,12 +16,12 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-// 2️⃣ Panel toggles (unchanged)
+// 2️ Panel toggles (unchanged)
 const container = document.getElementById('container');
 document.getElementById('goRegister').onclick = () => container.classList.add('right-panel-active');
 document.getElementById('goLogin'   ).onclick = () => container.classList.remove('right-panel-active');
 
-// 3️⃣ Register: set approved=false for teachers
+// 3️ Register: set approved=false for teachers
 document.getElementById('registerForm').addEventListener('submit', async e => {
   e.preventDefault();
   const email    = e.target.regEmail.value;
@@ -52,7 +52,7 @@ document.getElementById('registerForm').addEventListener('submit', async e => {
   }
 });
 
-// 4️⃣ Login: admin shortcut → pending check → redirect
+// 4️ Login: admin shortcut → pending check → redirect
 document.getElementById('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
   const email = e.target.loginEmail.value;
