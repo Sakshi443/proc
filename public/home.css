@@ -1033,3 +1033,47 @@ button {
     font-weight:600
   }
 }
+.footer-row {
+  display: flex;
+  justify-content: center;
+  text-align: left;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+  padding: 10px;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 20px;
+}
+
+.footer-bottom p,
+.footer-bottom .social-icons {
+  flex: 1;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .footer-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-col {
+    max-width: 100%;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+  }
+}
