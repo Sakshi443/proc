@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Proctor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap & FontAwesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/10.15.7/sweetalert2.min.css">
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .footer-custom {
+      background-color: #202124;
+      color: white;
+    }
+
+    .footer-custom a {
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .footer-custom a:hover {
+      text-decoration: underline;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar (Optional) -->
+  <nav class="navbar navbar-dark bg-dark d-md-none px-4">
+    <a class="navbar-brand mx-auto" href="#">
+      <lottie-player src="https://assets1.lottiefiles.com/packages/lf20_wEt2nn.json" background="transparent" speed="1"
+        style="width: 75px; height: 50px;" loop autoplay></lottie-player>
+    </a>
+  </nav>
+
+  <!-- Sidebar (for desktop only) -->
+  <div class="d-none d-md-block bg-dark text-white p-3" style="width: 250px; float: left; height: 100vh;">
+    <h4>MyProctor.ai</h4>
+    <ul class="nav flex-column">
+      <li class="nav-item"><a href="#" class="nav-link text-white" onclick="funStartExam()"><i
+            class="fas fa-clipboard-list"></i> Give Exam</a></li>
+      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="fas fa-history"></i> Exam History</a></li>
+      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="fas fa-poll"></i> Results</a></li>
+      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="fas fa-bug"></i> Report Problems</a></li>
+      <li class="nav-item"><a href="#" class="nav-link text-white"><i class="fas fa-key"></i> Change Password</a></li>
+      <li class="nav-item"><a href="#" class="nav-link text-white" onclick="funLogout()"><i
+            class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <main style="margin-left: 250px; padding: 20px;">
+    <h1>Welcome to Exam Guardian</h1>
+    <p>This is your exam dashboard.</p>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function funLogout() {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to logout?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Logout me!',
+        cancelButtonText: 'No!',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#202124',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire('Success!', 'You are successfully signed out from the system.', 'success');
+        } else {
+          Swal.fire('Cancelled', 'Logout cancelled.', 'error');
+        }
+      });
+    }
+
+    function funStartExam() {
+      Swal.fire({
+        title: '<strong>BEFORE EXAM LOGIN RULES</strong>',
+        icon: 'warning',
+        html:
+          '<h5>ONLINE EXAM RULES TO BE FOLLOWED STRICTLY</h5>' +
+          '<ol>' +
+          '<li>Do not minimize the window; it will be monitored.</li>' +
+          '<li>Check that your camera is working properly.</li>' +
+          '<li>Do not use a mobile phone or any unauthorized material.</li>' +
+          '<li>Use the system-provided calculator only.</li>' +
+          '<li>Do not use incognito mode and enable cookies.</li>' +
+          '<li>Contact support at +91 9320907041 or care@narenderkeswani.com for issues.</li>' +
+          '</ol>',
+        confirmButtonText: 'OK, BEGIN EXAM!',
+        confirmButtonColor: '#202124'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/dashboard/test.html";
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
