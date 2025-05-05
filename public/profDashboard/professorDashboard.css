@@ -23,26 +23,16 @@
     right: 20px;
     top: 20px;
     padding: 8px 16px;
-    background-color: #e74c3c;
     border: none;
-    color: white;
     border-radius: 4px;
     cursor: pointer;
+  }
+  header button a:hover {
+    color: white;
+    /* transform: scale(1.02); */
+    background-color: #e74c3c;
     text-decoration: none;
-  }
-
-  /* button a {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    padding: 8px 16px;
-    background-color: #e74c3c;
-    border: none;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-   */
+    }
   .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
