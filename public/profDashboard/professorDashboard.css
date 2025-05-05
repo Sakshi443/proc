@@ -31,10 +31,10 @@
     text-decoration: none;
   }
   header button a:hover {
-    color: white;
-    background-color: #e74c3c;
     text-decoration: none;
-    transform: scale(1.02);
+    color: rgb(247, 244, 244);
+    /* background-color: #e74c3c; */
+    /* transform: scale(1.02); */
     /* background-color: #ecf0f1; */
     }
   .dashboard-cards {
