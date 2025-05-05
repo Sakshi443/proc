@@ -24,14 +24,18 @@
     top: 20px;
     padding: 8px 16px;
     border: none;
+    color: white;
     border-radius: 4px;
+    background-color: #e74c3c;
     cursor: pointer;
+    text-decoration: none;
   }
   header button a:hover {
     color: white;
-    /* transform: scale(1.02); */
     background-color: #e74c3c;
     text-decoration: none;
+    transform: scale(1.02);
+    /* background-color: #ecf0f1; */
     }
   .dashboard-cards {
     display: grid;
