@@ -78,8 +78,8 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
       return;
     }
 
-    if (role === 'teacher')      window.location.href = 'dashboard/professorDashboard.html';
-    else if (role === 'student') window.location.href = 'dashboard/studentDashboard.html';
+    if (role === 'teacher')      window.location.href = 'profDashboard/professorDashboard.html';
+    else if (role === 'student') window.location.href = 'studDashboard/studentDashboard.html';
     else                          alert('Unknown role.');
   } catch(err) {
     alert(err.message);
