@@ -18,7 +18,7 @@ function showSection(id) {
   
   function logout() {
     alert("Logging out...");
-    window.location.href = "login.html"; // replace with actual login page
+    window.location.href = "index.html"; // replace with actual login page
   }
   
   function goBack() {
