@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Dashboard</title>
+  <link rel="stylesheet" href="./exam-dashboard.css" />
+  <link rel="stylesheet" href="../profDashboard/style.css">
+</head>
+
+<body>
+  <header>
+    <h1>Create & Manage Exams</h1>
+    <button onclick="goBack()">← Back</button>
+  </header>
+  <div class="dashboard-container">
+    <h1>Exam Dashboard</h1>
+
+    <div class="exam-meta">
+      <p><strong>Exam:</strong> AI & ML Midterm</p>
+      <p><strong>Student:</strong> Pallavi Sharma</p>
+      <p><strong>Time Remaining:</strong> <span id="timer">00:30:00</span></p>
+    </div>
+
+    <div class="proctoring-stats">
+      <h2>Proctoring Status</h2>
+      <ul>
+        <li>Face Detected: <span id="faceStatus">Yes</span></li>
+        <li>Gaze Tracking: <span id="gazeStatus">On Screen</span></li>
+        <li>Tab Switches: <span id="tabSwitches">0</span></li>
+        <li>Alerts Raised: <span id="alerts">0</span></li>
+      </ul>
+    </div>
+
+    <div class="exam-actions">
+      <button onclick="submitExam()">Submit Exam</button>
+    </div>
+  </div>
+
+  <script src="./exam-dashboard.js"></script>
+  <script src="./studentDashboard.js"></script>
+</body>
+
+</html>

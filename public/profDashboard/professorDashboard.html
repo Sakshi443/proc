@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professor Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <link rel="stylesheet" href="./professorDashboard.css" />
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="120x120"
+        href="{{ url_for('static', filename='volt/assets/img/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ url_for('static', filename='volt/assets/img/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ url_for('static', filename='volt/assets/img/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='volt/assets/img/favicon/site.webmanifest') }}">
+
+    <!-- Fontawesome -->
+    <link type="text/css" rel="stylesheet"
+        href="{{ url_for('static', filename='volt/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}">
+
+    <!-- Volt CSS -->
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='volt/css/volt.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+    <!-- Lottie Js -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <!-- Custom CSS to remove white bar at bottom and ensure full page -->
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .content {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        footer {
+            display: none;
+        }
+
+        /* Ensure the sidebar takes full height */
+        #sidebarMenu {
+            height: 100%;
+            position: fixed;
+        }
+
+        /* Make the main content area full height */
+        main.content {
+            margin-left: 250px;
+            /* Account for the fixed sidebar */
+            padding-top: 20px;
+            height: calc(100vh - 20px);
+            /* Full height minus top padding */
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Professor Dashboard</h1>
+        <button onclick="logout()">Logout</button>
+    </header>
+
+    <!-- ----------------------------------------------------------- -->
+    <!-- <nav id="sidebarMenu" class="sidebar d-md-block bg-dark text-white flex-md-column flex-row collapse" data-simplebar>
+        <div class="sidebar-inner px-4 pt-3">
+            <div
+                class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+                <div class="d-flex align-items-center">
+
+                    <div class="d-block">
+                        <h2 class="h6">{{session.name}}</h2>
+                        <a href="#" onclick="return funLogout()" class="btn btn-secondary text-dark btn-xs"><span
+                                class="me-2"><span class="fas fa-sign-out-alt"></span></span>Logout</a>
+                    </div>
+                </div>
+            </div>
+            <li class="nav-item">
+                <a href="../home.html" onclick="return funLogout()"
+                    class="btn btn-secondary d-flex align-items-center justify-content-center">
+                    <span class="sidebar-icon"><span class="fas fa-sign-out-alt"></span></span>
+                    <span>Logout</span>
+                </a>
+            </li>
+            </ul>
+        </div>
+    </nav> -->
+
+    <!-- ----------------------------------------------------------- -->
+
+    <main>
+        <section class="dashboard-cards">
+            <div class="card" onclick="goTo('manage-exams.html')">
+                <h2>Manage Exams</h2>
+                <p>Create or edit exam schedules</p>
+            </div>
+            <div class="card" onclick="goTo('monitor-students.html')">
+                <h2>Monitor Students</h2>
+                <p>View live exam sessions & alerts</p>
+            </div>
+            <div class="card" onclick="goTo('flagged-reports.html')">
+                <h2>View Reports</h2>
+                <p>Review flagged incidents and logs</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ----------------------------------------------------------- -->
+
+    <script src="./professorDashboard.js"></script>
+    <!-- <script>
+        function funLogout() {
+            swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to logout?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Logout me!',
+                cancelButtonText: 'No!',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#202124',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/logout",
+                        success: function (response) {
+                            if (response == "success") {
+                                console.log(response);
+                                window.location.href = "/public/index.html";
+                            }
+                        }
+                    });
+                    swal.fire(
+                        'Success!',
+                        'You have successfully signed out from the system.',
+                        'success'
+                    )
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    swal.fire(
+                        'Cancelled',
+                        'Logout cancelled.',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script> -->
+
+    <!-- Core -->
+    <script src="{{ url_for('static', filename='volt/vendor/@popperjs/core/dist/umd/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='volt/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
+    <!-- Vendor JS -->
+    <script src="{{ url_for('static', filename='volt/vendor/onscreen/dist/on-screen.umd.min.js') }}"></script>
+
+    <!-- Sweet Alerts 2 -->
+    <script src="{{ url_for('static', filename='volt/vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+
+    <!-- Volt JS -->
+    <script src="{{ url_for('static', filename='volt/assets/js/volt.js') }}"></script>
+</body>
+
+</html>

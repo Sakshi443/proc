@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="./studentDashboard.css" />
+  <link rel="stylesheet" href="./sD.html">
+</head>
+
+<body>
+  <div class="wrapper">
+    <nav class="sidebar">
+      <h2>Dashboard</h2>
+      <ul>
+        <li><a href="./studentDashboard.html">🏠 Home</a></li>
+        <li><a href="./Student_profile.html">👤 Student Profile</a></li>
+        <li><a href="exam-profile.html">📝 Exam Profile</a></li>
+        <li><a href="./exam-dashboard.html">🎥 Start Exam</a></li>
+        <li><a href="./violation-report.html">⚠️ Violation Report</a></li>
+        <li><a href="./proctor-dashboard.html">🛡️ Proctor View</a></li>
+        <!-- <li class="nav-item"><a href="../home.html" class="nav-link text-white" onclick="funLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li> -->
+        <li><a href="../home.html" onclick="funLogout()"> Logout</a></li>
+      </ul>
+    </nav>
+
+    <div class="main-content">
+      <header>
+        <h1>Welcome to Your Student Dashboard</h1>
+      </header>
+      <section class="cards">
+        <div class="card">
+          <h3>👤 Student Profile</h3>
+          <p>Update your details.</p>
+          <a href="./Student_profile.html">Go →</a>
+        </div>
+        <div class="card">
+          <h3>📝 Exam Profile</h3>
+          <p>View exam info.</p>
+          <a href="exam-profile.html">Go →</a>
+        </div>
+        <div class="card">
+          <h3>🎥 Start Exam</h3>
+          <p>Begin the test securely.</p>
+          <a href="./exam-dashboard.html">Go →</a>
+        </div>
+        <div class="card">
+          <h3>⚠️ Violation Report</h3>
+          <p>See flagged incidents.</p>
+          <a href="./violation-report.html">Go →</a>
+        </div>
+        <div class="card">
+          <h3>🛡️ Proctor View</h3>
+          <p>Admin-only dashboard.</p>
+          <a href="./proctor-dashboard.html">Go →</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+
+</html>

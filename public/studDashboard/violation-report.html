@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Violation Report</title>
+  <link rel="stylesheet" href="./violation-report.css"/>
+  <!-- <link rel="stylesheet" href="../profDashboard/style.css"> -->
+</head>
+<body>
+  <div class="container">
+    <h1>Violation Report</h1>
+    <a href="./studentDashboard.html" class="back-btn">← Back to Dashboard</a>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Violation Type</th>
+          <th>Timestamp</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="reportBody">
+        <!-- Violations will be populated here by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- <script src="./studentDashboard.js"></script> -->
+  <script>
+    const violations = [
+      { type: "Face Not Detected", time: "10:05 AM", desc: "Face not visible for 15 seconds." },
+      { type: "Gaze Away", time: "10:10 AM", desc: "Looked away from screen multiple times." },
+      { type: "Tab Switch", time: "10:15 AM", desc: "Switched browser tab during exam." }
+    ];
+
+    const tbody = document.getElementById("reportBody");
+
+    violations.forEach((v, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${v.type}</td>
+        <td>${v.time}</td>
+        <td>${v.desc}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile</title>
+  <link rel="stylesheet" href="./student-profile.css" />
+  <link rel="stylesheet" href="../profDashboard/style.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Create & Manage Exams</h1>
+    <button onclick="goBack()">← Back</button>
+  </header>
+  <div class="profile-container">
+    <h1>Student Profile</h1>
+
+    <div class="profile-photo">
+      <img id="profileImage" src="default-avatar.png" alt="" />
+      <input type="file" id="upload" accept="image/*" onchange="loadPhoto(event)">
+    </div>
+
+    <form id="profileForm">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="email">Institutional Email:</label>
+      <input type="email" id="email" placeholder="example@university.edu" required />
+
+      <label for="studentId">Student ID:</label>
+      <input type="text" id="studentId" placeholder="ID123456" required />
+
+      <label for="status">Verification Status:</label>
+      <input type="text" id="status" value="Verified" disabled />
+
+      <button type="submit">Save Profile</button>
+    </form>
+  </div>
+
+  <script src="./student-profile.js"></script>
+</body>
+
+</html>

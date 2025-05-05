@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitor Students</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Live Monitoring</h1>
+    <button onclick="goBack()">← Back</button>
+  </header>
+
+  <main>
+    <div class="student-grid">
+      <div class="student-card">
+        <h3>John Doe</h3>
+        <video class="student-video" controls muted>Camera Feed</video>
+        <p>Gaze: <span class="status pass">Normal</span></p>
+        <p>Violations: <span class="status warning">Looking away</span></p>
+      </div>
+      <div class="student-card">
+        <h3>Priya Sharma</h3>
+        <video class="student-video" controls muted>Camera Feed</video>
+        <p>Gaze: <span class="status pass">Normal</span></p>
+        <p>Violations: <span class="status danger">Tab switch</span></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="./monitor-students.js"></script>
+</body>
+
+</html>

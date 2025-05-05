@@ -1,0 +1,64 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .dashboard-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  }
+  
+  h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+  }
+  
+  .exam-meta p {
+    font-size: 18px;
+    margin: 5px 0;
+  }
+  
+  .proctoring-stats {
+    margin-top: 30px;
+  }
+  
+  .proctoring-stats ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .proctoring-stats li {
+    font-size: 16px;
+    padding: 8px;
+    background-color: #ecf0f1;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .exam-actions {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  button {
+    padding: 12px 25px;
+    background-color: #2ecc71;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #27ae60;
+  }
+  
