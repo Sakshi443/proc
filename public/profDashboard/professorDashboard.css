@@ -29,6 +29,10 @@
     border-radius: 4px;
     cursor: pointer;
   }
+
+  button a {
+    text-decoration: none;
+  }
   
   .dashboard-cards {
     display: grid;
