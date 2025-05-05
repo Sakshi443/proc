@@ -18,7 +18,7 @@
     position: relative;
   }
   
-  header button {
+  header button a {
     position: absolute;
     right: 20px;
     top: 20px;
@@ -28,10 +28,10 @@
     color: white;
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none;
   }
 
-  button a {
-    text-decoration: none;
+  /* button a {
     position: absolute;
     right: 20px;
     top: 20px;
@@ -42,7 +42,7 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  
+   */
   .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
