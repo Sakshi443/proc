@@ -17,7 +17,8 @@
     <div class="w-full overflow-x-auto">
       <table id="proctors" class="w-full whitespace-no-wrap">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr
+            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="px-4 py-3">User</th>
             <th class="px-4 py-3">Email</th>
             <th class="px-4 py-3">Status</th>
@@ -35,7 +36,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getAuth, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAg-Qc46CzCYdN_JGayHuR7xYxlsryUpZc",
@@ -60,8 +61,7 @@
       const tbody = document.getElementById('pendingUsersBody');
       const q = query(collection(db, 'users'),
                       where('role', '==', 'teacher'),
-                      where('approved', '==', false),
-                      where('denied', '!=', true));
+                      where('approved', '==', false));
       const snap = await getDocs(q);
 
       snap.forEach(docSnap => {
@@ -71,7 +71,9 @@
         tr.className = "text-gray-700 dark:text-gray-400";
         tr.innerHTML = `
           <td class="px-4 py-3">
-            <div><p class="font-semibold">${username}</p></div>
+            <div>
+              <p class="font-semibold">${username}</p>
+            </div>
           </td>
           <td class="px-4 py-3 text-sm">${email}</td>
           <td class="px-4 py-3 text-xs">
@@ -79,11 +81,13 @@
               Pending
             </span>
           </td>
-          <td class="px-4 py-3 flex gap-2">
-            <button data-id="${docSnap.id}" class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
+          <td class="px-4 py-3 space-x-2">
+            <button data-id="${docSnap.id}"
+              class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
               Approve
             </button>
-            <button data-id="${docSnap.id}" class="deny-btn bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-3 py-1 rounded">
+            <button data-id="${docSnap.id}"
+              class="deny-btn bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-3 py-1 rounded">
               Deny
             </button>
           </td>
@@ -93,54 +97,30 @@
       });
 
       tbody.addEventListener('click', async e => {
-        const btn = e.target;
-        const uid = btn.dataset.id;
-        const row = btn.closest('tr');
-        const statusCell = row.children[2];
-        const approveBtn = row.querySelector('.approve-btn');
-        const denyBtn = row.querySelector('.deny-btn');
+        const target = e.target;
+        const uid = target.dataset.id;
+        const row = target.closest('tr');
 
-        if (btn.classList.contains('approve-btn')) {
-          await updateDoc(doc(db, 'users', uid), {
-            approved: true,
-            denied: false
-          });
-
+        if (target.classList.contains('approve-btn')) {
+          await updateDoc(doc(db, 'users', uid), { approved: true });
+          target.textContent = 'Approved';
+          target.disabled = true;
+          target.classList.remove('bg-green-500', 'hover:bg-green-600');
+          target.classList.add('bg-gray-400', 'cursor-not-allowed');
+          const statusCell = row.children[2];
           statusCell.innerHTML = `
             <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
               Approved
             </span>
           `;
+        }
 
-          approveBtn.textContent = 'Approved';
-          approveBtn.disabled = true;
-          approveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
-          approveBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-
-          denyBtn.disabled = true;
-          denyBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
-          denyBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-
-        } else if (btn.classList.contains('deny-btn')) {
-          await updateDoc(doc(db, 'users', uid), {
-            approved: false,
-            denied: true
-          });
-
-          statusCell.innerHTML = `
-            <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
-              Denied
-            </span>
-          `;
-
-          denyBtn.textContent = 'Denied';
-          denyBtn.disabled = true;
-          denyBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
-          denyBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-
-          approveBtn.disabled = true;
-          approveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
-          approveBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+        if (target.classList.contains('deny-btn')) {
+          const confirmDelete = confirm("Are you sure you want to deny this user?");
+          if (confirmDelete) {
+            await deleteDoc(doc(db, 'users', uid));
+            row.remove();
+          }
         }
       });
     }
