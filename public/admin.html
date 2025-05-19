@@ -35,8 +35,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getAuth, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-  import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAg-Qc46CzCYdN_JGayHuR7xYxlsryUpZc",
@@ -49,13 +48,30 @@
   };
 
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
   const db = getFirestore(app);
 
-  onAuthStateChanged(auth, user => {
-    if (!user || user.email !== 'admin@gmail.com') location.href = 'index.html';
-    else loadPending();
-  });
+  async function updateAllUsers() {
+    const usersRef = collection(db, 'users');
+    const snapshot = await getDocs(usersRef);
+
+    for (const userDoc of snapshot.docs) {
+      const data = userDoc.data();
+
+      // Only update users who are teachers (optional filter)
+      if (data.role === 'teacher') {
+        await updateDoc(doc(db, 'users', userDoc.id), {
+          approved: false,
+          denied: false
+        });
+        console.log(`Updated: ${data.email}`);
+      }
+    }
+
+    console.log('✅ All users updated successfully.');
+  }
+
+  updateAllUsers();
+
 
   async function loadPending() {
     const tbody = document.getElementById('pendingUsersBody');
