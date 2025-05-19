@@ -17,8 +17,7 @@
     <div class="w-full overflow-x-auto">
       <table id="proctors" class="w-full whitespace-no-wrap">
         <thead>
-          <tr
-            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="px-4 py-3">User</th>
             <th class="px-4 py-3">Email</th>
             <th class="px-4 py-3">Status</th>
@@ -61,31 +60,31 @@
       const tbody = document.getElementById('pendingUsersBody');
       const q = query(collection(db, 'users'),
                       where('role', '==', 'teacher'),
-                      where('approved', '==', false));
+                      where('approved', '==', false),
+                      where('denied', '!=', true));
       const snap = await getDocs(q);
 
       snap.forEach(docSnap => {
         const { username, email } = docSnap.data();
-        const date = new Date().toLocaleDateString(); // Optional: Replace with createdAt field if available
+        const date = new Date().toLocaleDateString();
         const tr = document.createElement('tr');
         tr.className = "text-gray-700 dark:text-gray-400";
         tr.innerHTML = `
           <td class="px-4 py-3">
-            <div>
-              <p class="font-semibold">${username}</p>
-            </div>
+            <div><p class="font-semibold">${username}</p></div>
           </td>
           <td class="px-4 py-3 text-sm">${email}</td>
           <td class="px-4 py-3 text-xs">
-            <span
-              class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+            <span class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
               Pending
             </span>
           </td>
-          <td class="px-4 py-3">
-            <button data-id="${docSnap.id}"
-              class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
+          <td class="px-4 py-3 flex gap-2">
+            <button data-id="${docSnap.id}" class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
               Approve
+            </button>
+            <button data-id="${docSnap.id}" class="deny-btn bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-3 py-1 rounded">
+              Deny
             </button>
           </td>
           <td class="px-4 py-3 text-sm">${date}</td>
@@ -94,20 +93,54 @@
       });
 
       tbody.addEventListener('click', async e => {
-        if (e.target.tagName === 'BUTTON' && e.target.classList.contains('approve-btn')) {
-          const uid = e.target.dataset.id;
-          await updateDoc(doc(db, 'users', uid), { approved: true });
-          e.target.textContent = 'Approved';
-          e.target.disabled = true;
-          e.target.classList.remove('bg-green-500', 'hover:bg-green-600');
-          e.target.classList.add('bg-gray-400', 'cursor-not-allowed');
-          const statusCell = e.target.closest('tr').children[2];
+        const btn = e.target;
+        const uid = btn.dataset.id;
+        const row = btn.closest('tr');
+        const statusCell = row.children[2];
+        const approveBtn = row.querySelector('.approve-btn');
+        const denyBtn = row.querySelector('.deny-btn');
+
+        if (btn.classList.contains('approve-btn')) {
+          await updateDoc(doc(db, 'users', uid), {
+            approved: true,
+            denied: false
+          });
+
           statusCell.innerHTML = `
-            <span
-              class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+            <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
               Approved
             </span>
           `;
+
+          approveBtn.textContent = 'Approved';
+          approveBtn.disabled = true;
+          approveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+          approveBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+
+          denyBtn.disabled = true;
+          denyBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+          denyBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+
+        } else if (btn.classList.contains('deny-btn')) {
+          await updateDoc(doc(db, 'users', uid), {
+            approved: false,
+            denied: true
+          });
+
+          statusCell.innerHTML = `
+            <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
+              Denied
+            </span>
+          `;
+
+          denyBtn.textContent = 'Denied';
+          denyBtn.disabled = true;
+          denyBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+          denyBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+
+          approveBtn.disabled = true;
+          approveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+          approveBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
         }
       });
     }
