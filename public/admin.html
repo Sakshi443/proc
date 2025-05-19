@@ -3,22 +3,35 @@
 <head>
   <meta charset="UTF-8"/>
   <title>Admin Approval</title>
-  <style>
-    body { font-family: sans-serif; padding: 1rem; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: .5rem; text-align: left; }
-    button { padding: .25rem .5rem; }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>👤 Pending Teacher Approvals</h1>
-  <button onclick="signOut()">Logout</button>
-  <table id="pendings">
-    <thead>
-      <tr><th>Username</th><th>Email</th><th>Action</th></tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">👤 Pending Teacher Approvals</h1>
+    <button onclick="signOut()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded">
+      Logout
+    </button>
+  </div>
+
+  <div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+      <table id="proctors" class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+            <th class="px-4 py-3">User</th>
+            <th class="px-4 py-3">Email</th>
+            <th class="px-4 py-3">Status</th>
+            <th class="px-4 py-3">Action</th>
+            <th class="px-4 py-3">Date</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="pendingUsersBody">
+          <!-- Dynamic rows go here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -26,51 +39,80 @@
     import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
     const firebaseConfig = {
-  apiKey: "AIzaSyAg-Qc46CzCYdN_JGayHuR7xYxlsryUpZc",
-  authDomain: "proctored-system.firebaseapp.com",
-  projectId: "proctored-system",
-  storageBucket: "proctored-system.firebasestorage.app",
-  messagingSenderId: "512898908874",
-  appId: "1:512898908874:web:23584b6cad04eb9e0c2a33",
-  measurementId: "G-3SL8C6C8RD"
-};
+      apiKey: "AIzaSyAg-Qc46CzCYdN_JGayHuR7xYxlsryUpZc",
+      authDomain: "proctored-system.firebaseapp.com",
+      projectId: "proctored-system",
+      storageBucket: "proctored-system.firebasestorage.app",
+      messagingSenderId: "512898908874",
+      appId: "1:512898908874:web:23584b6cad04eb9e0c2a33",
+      measurementId: "G-3SL8C6C8RD"
+    };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // guard: only admin can view
     onAuthStateChanged(auth, user => {
       if (!user || user.email !== 'admin@gmail.com') location.href = 'index.html';
       else loadPending();
     });
 
     async function loadPending() {
-      const tbody = document.querySelector('#pendings tbody');
+      const tbody = document.getElementById('pendingUsersBody');
       const q = query(collection(db, 'users'),
                       where('role', '==', 'teacher'),
                       where('approved', '==', false));
       const snap = await getDocs(q);
+
       snap.forEach(docSnap => {
         const { username, email } = docSnap.data();
+        const date = new Date().toLocaleDateString(); // Optional: Replace with createdAt field if available
         const tr = document.createElement('tr');
+        tr.className = "text-gray-700 dark:text-gray-400";
         tr.innerHTML = `
-          <td>${username}</td>
-          <td>${email}</td>
-          <td><button data-id="${docSnap.id}">Approve</button></td>`;
+          <td class="px-4 py-3">
+            <div>
+              <p class="font-semibold">${username}</p>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-sm">${email}</td>
+          <td class="px-4 py-3 text-xs">
+            <span
+              class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+              Pending
+            </span>
+          </td>
+          <td class="px-4 py-3">
+            <button data-id="${docSnap.id}"
+              class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
+              Approve
+            </button>
+          </td>
+          <td class="px-4 py-3 text-sm">${date}</td>
+        `;
         tbody.appendChild(tr);
       });
+
       tbody.addEventListener('click', async e => {
-        if (e.target.tagName === 'BUTTON') {
+        if (e.target.tagName === 'BUTTON' && e.target.classList.contains('approve-btn')) {
           const uid = e.target.dataset.id;
           await updateDoc(doc(db, 'users', uid), { approved: true });
           e.target.textContent = 'Approved';
           e.target.disabled = true;
+          e.target.classList.remove('bg-green-500', 'hover:bg-green-600');
+          e.target.classList.add('bg-gray-400', 'cursor-not-allowed');
+          const statusCell = e.target.closest('tr').children[2];
+          statusCell.innerHTML = `
+            <span
+              class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+              Approved
+            </span>
+          `;
         }
       });
     }
 
-    window.signOut = () => fbSignOut(auth).then(() => location='login.html');
+    window.signOut = () => fbSignOut(auth).then(() => location = 'login.html');
   </script>
-   
 </body>
 </html>
