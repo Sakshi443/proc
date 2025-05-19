@@ -33,139 +33,86 @@
     </div>
   </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAuth, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAg-Qc46CzCYdN_JGayHuR7xYxlsryUpZc",
-    authDomain: "proctored-system.firebaseapp.com",
-    projectId: "proctored-system",
-    storageBucket: "proctored-system.firebasestorage.app",
-    messagingSenderId: "512898908874",
-    appId: "1:512898908874:web:23584b6cad04eb9e0c2a33",
-    measurementId: "G-3SL8C6C8RD"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg-Qc46CzCYdN_JGayHuR7xYxlsryUpZc",
+      authDomain: "proctored-system.firebaseapp.com",
+      projectId: "proctored-system",
+      storageBucket: "proctored-system.firebasestorage.app",
+      messagingSenderId: "512898908874",
+      appId: "1:512898908874:web:23584b6cad04eb9e0c2a33",
+      measurementId: "G-3SL8C6C8RD"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  async function updateAllUsers() {
-    const usersRef = collection(db, 'users');
-    const snapshot = await getDocs(usersRef);
-
-    for (const userDoc of snapshot.docs) {
-      const data = userDoc.data();
-
-      // Only update users who are teachers (optional filter)
-      if (data.role === 'teacher') {
-        await updateDoc(doc(db, 'users', userDoc.id), {
-          approved: false,
-          denied: false
-        });
-        console.log(`Updated: ${data.email}`);
-      }
-    }
-
-    console.log('✅ All users updated successfully.');
-  }
-
-  updateAllUsers();
-
-
-  async function loadPending() {
-    const tbody = document.getElementById('pendingUsersBody');
-    const q = query(collection(db, 'users'),
-                    where('role', '==', 'teacher'),
-                    where('approved', '==', false));
-    const snap = await getDocs(q);
-
-    snap.forEach(docSnap => {
-      const { username, email } = docSnap.data();
-      const date = new Date().toLocaleDateString();
-      const tr = document.createElement('tr');
-      tr.className = "text-gray-700 dark:text-gray-400";
-      tr.innerHTML = `
-        <td class="px-4 py-3">
-          <div>
-            <p class="font-semibold">${username}</p>
-          </div>
-        </td>
-        <td class="px-4 py-3 text-sm">${email}</td>
-        <td class="px-4 py-3 text-xs">
-          <span
-            class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
-            Pending
-          </span>
-        </td>
-        <td class="px-4 py-3">
-          <button data-id="${docSnap.id}"
-            class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded mr-2">
-            Approve
-          </button>
-          <button data-id="${docSnap.id}"
-            class="deny-btn bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-3 py-1 rounded">
-            Deny
-          </button>
-        </td>
-        <td class="px-4 py-3 text-sm">${date}</td>
-      `;
-      tbody.appendChild(tr);
+    onAuthStateChanged(auth, user => {
+      if (!user || user.email !== 'admin@gmail.com') location.href = 'index.html';
+      else loadPending();
     });
 
-    tbody.addEventListener('click', async e => {
-      const btn = e.target;
-      if (btn.tagName === 'BUTTON') {
-        const uid = btn.dataset.id;
+    async function loadPending() {
+      const tbody = document.getElementById('pendingUsersBody');
+      const q = query(collection(db, 'users'),
+                      where('role', '==', 'teacher'),
+                      where('approved', '==', false));
+      const snap = await getDocs(q);
 
-        // Approve action
-        if (btn.classList.contains('approve-btn')) {
+      snap.forEach(docSnap => {
+        const { username, email } = docSnap.data();
+        const date = new Date().toLocaleDateString(); // Optional: Replace with createdAt field if available
+        const tr = document.createElement('tr');
+        tr.className = "text-gray-700 dark:text-gray-400";
+        tr.innerHTML = `
+          <td class="px-4 py-3">
+            <div>
+              <p class="font-semibold">${username}</p>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-sm">${email}</td>
+          <td class="px-4 py-3 text-xs">
+            <span
+              class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+              Pending
+            </span>
+          </td>
+          <td class="px-4 py-3">
+            <button data-id="${docSnap.id}"
+              class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
+              Approve
+            </button>
+          </td>
+          <td class="px-4 py-3 text-sm">${date}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.addEventListener('click', async e => {
+        if (e.target.tagName === 'BUTTON' && e.target.classList.contains('approve-btn')) {
+          const uid = e.target.dataset.id;
           await updateDoc(doc(db, 'users', uid), { approved: true });
-          btn.textContent = 'Approved';
-          btn.disabled = true;
-          btn.classList.remove('bg-green-500', 'hover:bg-green-600');
-          btn.classList.add('bg-gray-400', 'cursor-not-allowed');
-
-          const statusCell = btn.closest('tr').children[2];
+          e.target.textContent = 'Approved';
+          e.target.disabled = true;
+          e.target.classList.remove('bg-green-500', 'hover:bg-green-600');
+          e.target.classList.add('bg-gray-400', 'cursor-not-allowed');
+          const statusCell = e.target.closest('tr').children[2];
           statusCell.innerHTML = `
             <span
               class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
               Approved
             </span>
           `;
-
-          // Also disable the Deny button in the same row
-          const denyBtn = btn.closest('td').querySelector('.deny-btn');
-          if (denyBtn) {
-            denyBtn.disabled = true;
-            denyBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
-            denyBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-          }
         }
+      });
+    }
 
-        // Deny action
-        if (btn.classList.contains('deny-btn')) {
-          btn.textContent = 'Denied';
-          btn.disabled = true;
-          btn.classList.remove('bg-red-500', 'hover:bg-red-600');
-          btn.classList.add('bg-gray-400', 'cursor-not-allowed');
-
-          // Also disable the Approve button in the same row
-          const approveBtn = btn.closest('td').querySelector('.approve-btn');
-          if (approveBtn) {
-            approveBtn.disabled = true;
-            approveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
-            approveBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-          }
-
-          // Status remains unchanged as "Pending"
-        }
-      }
-    });
-  }
-
-  window.signOut = () => fbSignOut(auth).then(() => location = 'login.html');
-</script>
-
+    window.signOut = () => fbSignOut(auth).then(() => location = 'login.html');
+  </script>
 </body>
 </html>
