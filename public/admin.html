@@ -17,8 +17,7 @@
     <div class="w-full overflow-x-auto">
       <table id="proctors" class="w-full whitespace-no-wrap">
         <thead>
-          <tr
-            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="px-4 py-3">User</th>
             <th class="px-4 py-3">Email</th>
             <th class="px-4 py-3">Status</th>
@@ -61,7 +60,8 @@
       const tbody = document.getElementById('pendingUsersBody');
       const q = query(collection(db, 'users'),
                       where('role', '==', 'teacher'),
-                      where('approved', '==', false));
+                      where('approved', '==', false),
+                      where('denied', '==', false));
       const snap = await getDocs(q);
 
       snap.forEach(docSnap => {
@@ -77,15 +77,18 @@
           </td>
           <td class="px-4 py-3 text-sm">${email}</td>
           <td class="px-4 py-3 text-xs">
-            <span
-              class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+            <span class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
               Pending
             </span>
           </td>
-          <td class="px-4 py-3">
+          <td class="px-4 py-3 space-x-2">
             <button data-id="${docSnap.id}"
               class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
               Approve
+            </button>
+            <button data-id="${docSnap.id}"
+              class="deny-btn bg-red-500 hover:bg-red-600 text-white text-xs font-medium px-3 py-1 rounded">
+              Deny
             </button>
           </td>
           <td class="px-4 py-3 text-sm">${date}</td>
@@ -101,11 +104,36 @@
           e.target.disabled = true;
           e.target.classList.remove('bg-green-500', 'hover:bg-green-600');
           e.target.classList.add('bg-gray-400', 'cursor-not-allowed');
+          const denyBtn = e.target.closest('td').querySelector('.deny-btn');
+          if (denyBtn) {
+            denyBtn.disabled = true;
+            denyBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+            denyBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+          }
           const statusCell = e.target.closest('tr').children[2];
           statusCell.innerHTML = `
-            <span
-              class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+            <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
               Approved
+            </span>
+          `;
+        }
+        else if (e.target.classList.contains('deny-btn')) {
+          const uid = e.target.dataset.id;
+          await updateDoc(doc(db, 'users', uid), { denied: true });
+          e.target.textContent = 'Denied';
+          e.target.disabled = true;
+          e.target.classList.remove('bg-red-500', 'hover:bg-red-600');
+          e.target.classList.add('bg-gray-400', 'cursor-not-allowed');
+          const approveBtn = e.target.closest('td').querySelector('.approve-btn');
+          if (approveBtn) {
+            approveBtn.disabled = true;
+            approveBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+            approveBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+          }
+          const statusCell = e.target.closest('tr').children[2];
+          statusCell.innerHTML = `
+            <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
+              Denied
             </span>
           `;
         }
