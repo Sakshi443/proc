@@ -5,29 +5,26 @@
   <title>Admin Approval</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
+<body class="p-6 bg-gray-100 dark:bg-gray-900">
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">👤 Pending Teacher Approvals</h1>
-    <button onclick="signOut()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded">
-      Logout
-    </button>
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">👤 Pending Teacher Approvals</h1>
+    <button onclick="signOut()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
   </div>
 
   <div class="w-full overflow-hidden rounded-lg shadow-xs">
     <div class="w-full overflow-x-auto">
       <table id="proctors" class="w-full whitespace-no-wrap">
         <thead>
-          <tr
-            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
             <th class="px-4 py-3">User</th>
             <th class="px-4 py-3">Email</th>
             <th class="px-4 py-3">Status</th>
-            <th class="px-4 py-3">Action</th>
             <th class="px-4 py-3">Date</th>
+            <th class="px-4 py-3">Action</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800" id="pendingUsersBody">
-          <!-- Dynamic rows go here -->
+        <tbody id="approval-tbody" class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <!-- Users inserted here by JS -->
         </tbody>
       </table>
     </div>
@@ -58,56 +55,44 @@
     });
 
     async function loadPending() {
-      const tbody = document.getElementById('pendingUsersBody');
-      const q = query(collection(db, 'users'),
-                      where('role', '==', 'teacher'),
-                      where('approved', '==', false));
+      const tbody = document.getElementById('approval-tbody');
+      const q = query(collection(db, 'users'), where('role', '==', 'teacher'), where('approved', '==', null));
       const snap = await getDocs(q);
-
       snap.forEach(docSnap => {
         const { username, email } = docSnap.data();
-        const date = new Date().toLocaleDateString(); // Optional: Replace with createdAt field if available
-        const tr = document.createElement('tr');
-        tr.className = "text-gray-700 dark:text-gray-400";
-        tr.innerHTML = `
-          <td class="px-4 py-3">
-            <div>
-              <p class="font-semibold">${username}</p>
-            </div>
-          </td>
+        const date = new Date().toLocaleDateString();
+        const row = document.createElement('tr');
+        row.className = "text-gray-700 dark:text-gray-400";
+        row.innerHTML = `
+          <td class="px-4 py-3 font-semibold">${username}</td>
           <td class="px-4 py-3 text-sm">${email}</td>
           <td class="px-4 py-3 text-xs">
-            <span
-              class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
+            <span id="status-${docSnap.id}" class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full dark:text-white dark:bg-orange-600">
               Pending
             </span>
           </td>
-          <td class="px-4 py-3">
-            <button data-id="${docSnap.id}"
-              class="approve-btn bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-3 py-1 rounded">
-              Approve
-            </button>
-          </td>
           <td class="px-4 py-3 text-sm">${date}</td>
-        `;
-        tbody.appendChild(tr);
+          <td class="px-4 py-3 space-x-2">
+            <button data-id="${docSnap.id}" data-action="approve" class="px-3 py-1 text-sm font-medium text-white bg-green-500 rounded hover:bg-green-600">Approve</button>
+            <button data-id="${docSnap.id}" data-action="deny" class="px-3 py-1 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600">Deny</button>
+          </td>`;
+        tbody.appendChild(row);
       });
 
       tbody.addEventListener('click', async e => {
-        if (e.target.tagName === 'BUTTON' && e.target.classList.contains('approve-btn')) {
+        if (e.target.tagName === 'BUTTON') {
           const uid = e.target.dataset.id;
-          await updateDoc(doc(db, 'users', uid), { approved: true });
-          e.target.textContent = 'Approved';
-          e.target.disabled = true;
-          e.target.classList.remove('bg-green-500', 'hover:bg-green-600');
-          e.target.classList.add('bg-gray-400', 'cursor-not-allowed');
-          const statusCell = e.target.closest('tr').children[2];
-          statusCell.innerHTML = `
-            <span
-              class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
-              Approved
-            </span>
-          `;
+          const action = e.target.dataset.action;
+          const approved = action === 'approve';
+          await updateDoc(doc(db, 'users', uid), { approved });
+          
+          // Update status and disable buttons
+          document.getElementById(`status-${uid}`).textContent = approved ? 'Approved' : 'Denied';
+          document.getElementById(`status-${uid}`).className =
+            approved
+              ? 'px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100'
+              : 'px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100';
+          e.target.closest('td').innerHTML = `<span class="text-sm text-gray-500">${approved ? 'Approved' : 'Denied'}</span>`;
         }
       });
     }
