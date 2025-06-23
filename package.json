@@ -2,6 +2,7 @@
   "name": "proc",
   "version": "1.0.0",
   "description": "A project for Node.js application",
+  "types": "module",
   "main": "index.js",
   "scripts": {
     "start": "node public/app.js"
@@ -9,7 +10,8 @@
   "author": "Sakshi Manoorkar",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "firebase": "^11.9.1"
   },
   "type": "module"
 }
