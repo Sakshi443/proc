@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -73,8 +72,10 @@
 <body>
 
     <header>
-        <h1>Welcome, Student</h1>
-        <p>AI Proctoring System – Student Dashboard</p>
+        <h1>Welcome, Professor!</h1>
+        <p>AI Proctoring System – Professor Dashboard</p>
+  <p>UID: <span id="uid"></span></p>
+  <p>Email: <span id="email"></span></p>
     </header>
 
     <div class="container">
@@ -127,142 +128,13 @@
                 alert("Please complete face verification first.");
             }
         }
+
+
+    document.getElementById("uid").textContent = sessionStorage.getItem("uid") || localStorage.getItem("uid");
+    document.getElementById("email").textContent = sessionStorage.getItem("email") || localStorage.getItem("email");
+  
     </script>
 
 </body>
 
-=======
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Dashboard | AI Proctoring</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f5f7fa;
-        }
-
-        header {
-            background-color: #1a237e;
-            color: white;
-            text-align: center;
-            padding: 15px;
-        }
-
-        .container {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-        }
-
-        .card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            margin-top: 0;
-        }
-
-        .status {
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-
-        .verified {
-            color: green;
-            background: #e8f5e9;
-        }
-
-        .not-verified {
-            color: red;
-            background: #ffebee;
-        }
-
-        button {
-            background-color: #3949ab;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #303f9f;
-        }
-    </style>
-</head>
-
-<body>
-
-    <header>
-        <h1>Welcome, Student</h1>
-        <p>AI Proctoring System – Student Dashboard</p>
-    </header>
-
-    <div class="container">
-        <div class="card">
-            <h2>Upcoming Exam</h2>
-            <p><strong>Subject:</strong> Data Structures</p>
-            <p><strong>Date:</strong> April 15, 2025</p>
-            <p><strong>Time:</strong> 10:00 AM - 12:00 PM</p>
-            <p><strong>Exam ID:</strong> EXM1024</p>
-        </div>
-
-        <div class="card">
-            <h2>Face Verification Status</h2>
-            <p class="status not-verified" id="faceStatus">Not Verified</p>
-            <button onclick="verifyFace()">Verify Face</button>
-        </div>
-
-        <div class="card">
-            <h2>Exam Instructions</h2>
-            <ul>
-                <li>Ensure your webcam and microphone are functioning.</li>
-                <li>Do not switch tabs or open new windows during the exam.</li>
-                <li>Do not look away from the screen frequently.</li>
-                <li>Stay in a well-lit room with no background disturbances.</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Start Your Exam</h2>
-            <button onclick="startExam()">Start Proctored Exam</button>
-        </div>
-    </div>
-
-    <script>
-        function verifyFace() {
-            document.getElementById("faceStatus").innerText = "Verifying...";
-            setTimeout(() => {
-                document.getElementById("faceStatus").innerText = "Verified";
-                document.getElementById("faceStatus").classList.remove("not-verified");
-                document.getElementById("faceStatus").classList.add("verified");
-            }, 2000);
-        }
-
-        function startExam() {
-            const verified = document.getElementById("faceStatus").innerText === "Verified";
-            if (verified) {
-                alert("Launching the proctored exam...");
-                // window.location.href = "exam.html"; // Redirect to actual exam page
-            } else {
-                alert("Please complete face verification first.");
-            }
-        }
-    </script>
-
-</body>
-
->>>>>>> fe62c6529dc40f12b3fadbd54d96c96421b988eb
 </html>

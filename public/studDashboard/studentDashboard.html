@@ -27,7 +27,12 @@
 
     <div class="main-content">
       <header>
-        <h1>Welcome to Your Student Dashboard</h1>
+        <!-- <h1>Welcome to Your Student Dashboard</h1> -->
+        <h1>Welcome, Student!</h1>
+  <p>UID: <span id="uid"></span></p>
+  <p>Email: <span id="email"></span></p>
+
+
       </header>
       <section class="cards">
         <div class="card">
@@ -58,6 +63,11 @@
       </section>
     </div>
   </div>
+
+    <script>
+    document.getElementById("uid").textContent = sessionStorage.getItem("uid") || localStorage.getItem("uid");
+    document.getElementById("email").textContent = sessionStorage.getItem("email") || localStorage.getItem("email");
+  </script>
 </body>
 
 </html>
