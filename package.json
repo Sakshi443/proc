@@ -1,16 +1,25 @@
 {
-  "name": "proc",
+  "name": "proctorx",
   "version": "1.0.0",
-  "description": "A project for Node.js application",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node public/app.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
   },
-  "author": "Sakshi Manoorkar",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
+  "description": "",
   "dependencies": {
     "express": "^5.1.0",
-    "firebase": "^11.9.1"
+    "firebase": "^11.9.1",
+    "firebase-admin": "^13.4.0"
+  },
+  "devDependencies": {
+    "daisyui": "^5.0.43",
+    "dotenv": "^16.5.0",
+    "nodemon": "^3.1.10",
+    "tailwindcss": "^4.1.10"
   }
 }

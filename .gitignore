@@ -1,0 +1,5 @@
+# Ignore node modules and sensitive files
+node_modules/
+.env
+serviceAccountKey.json
+dist/
