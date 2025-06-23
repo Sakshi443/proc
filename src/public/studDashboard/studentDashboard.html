@@ -7,10 +7,13 @@
     <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/dashboards.css">
     <title>student Dashboard</title>
+    <style>
+        body { font-family: sans-serif; padding: 1rem; }
+        button { padding: .25rem .5rem; margin-right: 0.5rem; }
+    </style>
 </head>
 
 <body>
-    <!-- <h1>student Dashboard</h1> -->
     
     <div class="task-manager">
         <div class="left-bar">
@@ -140,8 +143,9 @@
             <label class="category" for="opt-3">Notes</label>
         </div>
         <div class="label-wrapper">
-            <input class="nav-item" name="nav" type="radio" id="opt-4">
-            <label class="category" for="opt-4">Links</label>
+            <!-- <input class="nav-item" name="nav" type="radio" id="opt-4">
+            <label class="category" for="opt-4">Links</label> -->
+            <button onclick="signOut()">Logout</button>
         </div>
     </div>
     <div class="tasks-wrapper">
@@ -339,5 +343,8 @@
             </div>
         </div>
     </div> -->
+    <script>
+        window.signOut = () => fbSignOut(auth).then(() => location.href = "index.html");
+    </script>
 </body>
 </html>
