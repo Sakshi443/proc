@@ -2,7 +2,7 @@
 import {
   auth,
   db
-} from "..firebase.js";
+} from "../firebase.js";
 
 import {
   createUserWithEmailAndPassword,
@@ -10,14 +10,16 @@ import {
   sendEmailVerification,
   signOut,
   onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+// } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
+} from "firebase/auth";
 
 import {
   doc,
   setDoc,
   getDoc,
   updateDoc
-} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
+// } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
+} from "firebase/firestore";
 
 // UI toggle
 const container = document.getElementById("container");
